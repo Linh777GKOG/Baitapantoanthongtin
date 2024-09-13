@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mã hóa Caesar</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f9fb;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            display: flex;
+            justify-content: space-around;
+            max-width: 1200px;
+            margin: 0 auto;
+            gap: 20px;
+        }
+        .box {
+            width: 30%;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+        h3 {
+            margin-top: 0;
+            color: #007bff;
+        }
+        textarea {
+            width: 100%;
+            height: 150px;
+            margin-top: 10px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+            resize: none;
+        }
+        .controls {
+            margin-top: 20px;
+        }
+        .controls select, .controls input {
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            width: 100%;
+            font-size: 16px;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- Plaintext Input -->
+    <div class="box">
+        <h3>Plaintext</h3>
+        <textarea id="plaintext" placeholder="Nhập bản rõ..."></textarea>
+    </div>
+
+    <!-- Caesar Cipher Settings -->
+    <div class="box">
+        <h3>Caesar Cipher</h3>
+        <div class="controls">
+            <label for="shift">Độ dịch (Shift):</label>
+            <input type="number" id="shift" value="7" min="1" max="25">
+            <label for="operation">Chọn chế độ:</label>
+            <select id="operation">
+                <option value="encode">Mã hóa (Encode)</option>
+                <option value="decode">Giải mã (Decode)</option>
+            </select>
+            <button onclick="processCipher()">Thực hiện</button>
+        </div>
+    </div>
+
+    <!-- Ciphertext Output -->
+    <div class="box">
+        <h3>Ciphertext</h3>
+        <textarea id="ciphertext" placeholder="Bản mã sẽ xuất hiện ở đây..."></textarea>
+    </div>
+</div>
+
+<script>
+    // Hàm mã hóa và giải mã Caesar Cipher
+    function caesarShift(str, shift, encode = true) {
+        let result = '';
+        shift = encode ? shift : -shift; // Nếu là decode, đổi chiều dịch
+        for (let i = 0; i < str.length; i++) {
+            let charCode = str.charCodeAt(i);
+            // Xử lý ký tự chỉ trong khoảng chữ cái
+            if (charCode >= 65 && charCode <= 90) {
+                result += String.fromCharCode(((charCode - 65 + shift + 26) % 26) + 65);
+            } else if (charCode >= 97 && charCode <= 122) {
+                result += String.fromCharCode(((charCode - 97 + shift + 26) % 26) + 97);
+            } else {
+                result += str.charAt(i); // Ký tự không phải chữ cái giữ nguyên
+            }
+        }
+        return result;
+    }
+
+    // Hàm xử lý khi nhấn nút Thực hiện
+    function processCipher() {
+        const shift = parseInt(document.getElementById('shift').value);
+        const operation = document.getElementById('operation').value;
+        const plaintext = document.getElementById('plaintext').value;
+        const ciphertext = document.getElementById('ciphertext').value;
+
+        if (operation === 'encode') {
+            document.getElementById('ciphertext').value = caesarShift(plaintext, shift, true);
+        } else {
+            document.getElementById('plaintext').value = caesarShift(ciphertext, shift, false);
+        }
+    }
+</script>
+
+</body>
+</html>
